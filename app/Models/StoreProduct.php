@@ -12,7 +12,7 @@ class StoreProduct extends Model
     protected $table = 'stores_products';
 
     protected $fillable = [
-        'quantity'
+        'store_id', 'product_id', 'quantity'
     ];
 
     public function store(){

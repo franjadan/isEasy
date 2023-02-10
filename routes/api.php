@@ -18,6 +18,16 @@ use App\Http\Controllers\{StoreController};
 Route::middleware('api')->group(function () {
     Route::prefix('/tiendas')->group(function () {
         Route::get('/', [StoreController::class, 'index']);
-        Route::get('/{store}/detalle', [StoreController::class, 'show']);
+        Route::get('/{store}', [StoreController::class, 'show']);
+        Route::post('/', [StoreController::class, 'store']);
+        Route::put('/{store}', [StoreController::class, 'update']);
+        Route::delete('/{store}', [StoreController::class, 'destroy']);
+
+        /*
+            Las rutas se podrían resumir en Route::resource('stores', StoreController::class);
+        */
+
+        Route::post('/{store}/vender/{product}', [StoreController::class, 'sell']);
+
     });
 });
