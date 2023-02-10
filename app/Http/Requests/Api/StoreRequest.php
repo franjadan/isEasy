@@ -31,15 +31,44 @@ class StoreRequest extends FormRequest
         return [
             'name' => ['required', 'min:3', Rule::unique('stores', 'name')->ignore($this->store)],
             'products.*.id' => ['sometimes', Rule::exists('products', 'id')],
-            'products.*.name' => ['required', 'min:3', 
-            Rule::unique('products', 'name')->where(function ($query) {
-                if(!(count(request()->input('products.*.id')) && request()->input('products.*.id')[0] == null)){
-                    $query->whereNotIn('id', request()->input('products.*.id'));
-                }
-                return $query;
-            })],
+            'products.*.name' => ['required', 'min:3'],
             'products.*.quantity' => ['required', 'numeric']
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if($this->store != null){
+                foreach($this->products as $key => $product){
+
+                    if(in_array('id', array_keys($product))){
+
+                        $storeProduct = StoreProduct::where('store_id', $this->store->id)->where('product_id', $product['id'])->first();
+
+                        if($storeProduct == null){
+                            $validator->errors()->add('products.' . $key . '.id', 'No existe este producto asociado a la tienda.');
+                            return;
+                        }
+                        
+                        $searchProduct = Product::where('id', '<>', $product['id'])->where('name', $product['name'])->first();
+                    }else{
+                        $searchProduct = Product::where('name', $product['name'])->first();
+                    }
+
+                    if($searchProduct != null){
+                        $validator->errors()->add('products.' . $key . '.name', 'Ese nombre está en uso.');
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -133,19 +162,32 @@ class StoreRequest extends FormRequest
                         'name' => $product['name'],
                     ]);
 
+                    $storeProduct = StoreProduct::create([
+                        'store_id' => $store->id,
+                        'product_id' => $productObj->id,
+                        'quantity' => $product['quantity']
+                    ]);
+
                 }else{
                     $productObj = Product::find($product['id']);
 
-                    $productObj->update([
-                        'name' => $product['name'],
-                    ]);
+                    if($productObj != null){
+
+                        $productObj->update([
+                            'name' => $product['name'],
+                        ]);
+    
+                        $storeProduct = StoreProduct::where('store_id', $store->id)->where('product_id', $productObj->id)->first();
+    
+                        if($storeProduct != null){
+                            $storeProduct->update([
+                                'quantity' => $product['quantity']
+                            ]);
+                        }
+                    }
                 }
 
-                $storeProduct = StoreProduct::create([
-                    'store_id' => $store->id,
-                    'product_id' => $productObj->id,
-                    'quantity' => $product['quantity']
-                ]);
+                
             }
         });
     }
