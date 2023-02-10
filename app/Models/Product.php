@@ -12,4 +12,10 @@ class Product extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function scopeSearch($query){
+        $query->when(request('name'), function($query, $search) {
+            return $query->where('name', 'like', "%{$search}%");
+        });
+    }
 }

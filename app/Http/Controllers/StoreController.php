@@ -14,7 +14,7 @@ class StoreController extends Controller
      * @return json
      */
     public function index(){
-        $stores = Store::orderBy('name')->get();
+        $stores = Store::search()->orderBy('name')->get();
 
         $data = [
 			'stores' => StoreResource::collection($stores),
