@@ -17,7 +17,7 @@ class StoreResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'products' => StoreProductResource::collection($this->products),
+            'products' => StoreProductResource::collection($this->products->sortBy('product.name')),
         ];
     }
 }

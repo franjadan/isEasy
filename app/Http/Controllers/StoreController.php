@@ -23,4 +23,19 @@ class StoreController extends Controller
 		return response()->json(["response" => ["code" => 1, "data" => $data]], 200);
 
     }
+
+
+    /**
+     * Muestra el detalle de una tienda específica relacionada con sus productos
+     *
+     * @return json
+     */
+    public function show(Store $store){
+
+        $data = [
+            'store' => new StoreResource($store)
+        ];
+
+		return response()->json(["response" => ["code" => 1, "data" => $data]], 200);
+    }
 }

@@ -16,5 +16,8 @@ use App\Http\Controllers\{StoreController};
 */
 
 Route::middleware('api')->group(function () {
-    Route::get('/tiendas', [StoreController::class, 'index']);
+    Route::prefix('/tiendas')->group(function () {
+        Route::get('/', [StoreController::class, 'index']);
+        Route::get('/{store}/detalle', [StoreController::class, 'show']);
+    });
 });
