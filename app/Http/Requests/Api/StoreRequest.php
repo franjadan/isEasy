@@ -96,7 +96,7 @@ class StoreRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json(['response' => ['code' => -1, 'error_data' => $validator->errors()]], 200));
+        throw new HttpResponseException(response()->json(['data' => $validator->errors()], 400));
     }
 
 

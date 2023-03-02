@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
         $exception = $this->prepareException($exception);
         
         if ($exception instanceof \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException) {
-            return response()->json(["response" => ["code" => -5, "error_data" => ["message" => 'Mantenimiento']]], 200);
+            return response()->json(["data" => ["message" => 'Mantenimiento']], 503);
         }
         if ($exception instanceof \Illuminate\Http\Exception\HttpResponseException) {
             $exception = $exception->getResponse();
@@ -117,6 +117,6 @@ class Handler extends ExceptionHandler
             $response['code'] = $exception->getCode();
         }
 
-        return response()->json(["response" => ["code" => -1, "error_data" => ["message" => $message]]], 200);
+        return response()->json(["data" => ["message" => $message]], $statusCode);
     }
 }

@@ -22,7 +22,7 @@ class StoreController extends Controller
 			'stores' => StoreResource::collection($stores),
 		];
 
-		return response()->json(["response" => ["code" => 1, "data" => $data]], 200);
+		return response()->json(["data" => $data], 200);
 
     }
 
@@ -38,7 +38,7 @@ class StoreController extends Controller
             'store' => new StoreResource($store)
         ];
 
-		return response()->json(["response" => ["code" => 1, "data" => $data]], 200);
+		return response()->json(["data" => $data], 200);
     }
 
     /**
@@ -51,7 +51,7 @@ class StoreController extends Controller
 
         $request->createStore();
 
-        return response()->json(["response" => ["code" => 1]], 200);
+        return response()->json(["data" => []], 201);
     }
 
     /**
@@ -65,7 +65,7 @@ class StoreController extends Controller
 
         $request->updateStore($store);
 
-        return response()->json(["response" => ["code" => 1]], 200);
+        return response()->json(["data" => []], 200);
     }
 
     /**
@@ -78,7 +78,7 @@ class StoreController extends Controller
 
         $store->delete();
 
-        return response()->json(["response" => ["code" => 1]], 200);
+        return response()->json(["data" => []], 200);
     }
 
     /**
@@ -104,20 +104,20 @@ class StoreController extends Controller
                     $storeProduct->save();
 
                     if($storeProduct->quantity == 0){
-                        return response()->json(["response" => ["code" => 1, 'data' => ['message' => 'Te has quedado sin stock del artículo.']]], 200);
+                        return response()->json(['data' => ['message' => 'Te has quedado sin stock del artículo.']], 200);
                     }elseif($storeProduct->quantity < 5){
-                        return response()->json(["response" => ["code" => 1, 'data' => ['message' => 'Quedan pocos artículos en stock.']]], 200);
+                        return response()->json(['data' => ['message' => 'Quedan pocos artículos en stock.']], 200);
                     }else{
-                        return response()->json(["response" => ["code" => 1]], 200);
+                        return response()->json(['data' => []], 200);
                     }
                 }else{
-                    return response()->json(["response" => ["code" => -1, "error_data" => ["message" => 'No tienes stock suficiente para realizar la operación.']]], 200);
+                    return response()->json(["data" => ["message" => 'No tienes stock suficiente para realizar la operación.']], 400);
                 } 
             }else{
-                return response()->json(["response" => ["code" => -1, "error_data" => ["message" => 'No se ha encontrado el producto asociado a la tienda.']]], 200);
+                return response()->json(["data" => ["message" => 'No se ha encontrado el producto asociado a la tienda.']], 400);
             }
         }else{
-            return response()->json(["response" => ["code" => -1, "error_data" => ["message" => 'No has introducido la cantidad a vender.']]], 200);
+            return response()->json(["data" => ["message" => 'No has introducido la cantidad a vender.']], 400);
         }
         
         
