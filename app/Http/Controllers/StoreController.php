@@ -43,7 +43,7 @@ class StoreController extends Controller
 
         $request->createStore();
 
-        return response()->json(["data" => []], 201);
+        return response()->json([], 201);
     }
 
     /**
@@ -57,7 +57,7 @@ class StoreController extends Controller
 
         $request->updateStore($store);
 
-        return response()->json(["data" => []], 200);
+        return response()->json([], 200);
     }
 
     /**
@@ -70,7 +70,7 @@ class StoreController extends Controller
 
         $store->delete();
 
-        return response()->json(["data" => []], 200);
+        return response()->json([], 200);
     }
 
     /**
