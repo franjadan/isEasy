@@ -18,11 +18,7 @@ class StoreController extends Controller
     public function index(){
         $stores = Store::search()->orderBy('name')->get();
 
-        $data = [
-			'stores' => StoreResource::collection($stores),
-		];
-
-		return response()->json(["data" => $data], 200);
+		return response()->json(["data" => StoreResource::collection($stores)], 200);
 
     }
 
@@ -34,11 +30,7 @@ class StoreController extends Controller
      */
     public function show(Store $store){
 
-        $data = [
-            'store' => new StoreResource($store)
-        ];
-
-		return response()->json(["data" => $data], 200);
+		return response()->json(["data" => new StoreResource($store)], 200);
     }
 
     /**

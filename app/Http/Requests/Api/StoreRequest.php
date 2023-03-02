@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             if($this->store != null){
-                foreach($this->products as $key => $product){
+                foreach($this->products ?? [] as $key => $product){
 
                     if(in_array('id', array_keys($product))){
 
@@ -96,7 +96,7 @@ class StoreRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json(['data' => $validator->errors()], 400));
+        throw new HttpResponseException(response()->json(['data' => $validator->errors()], 422));
     }
 
 
@@ -117,7 +117,7 @@ class StoreRequest extends FormRequest
                 'name' => $this->name
             ]);
 
-            foreach($this->products as $product){
+            foreach($this->products ?? [] as $product){
 
                 $newProduct = Product::create([
                     'name' => $product['name'],
@@ -154,7 +154,7 @@ class StoreRequest extends FormRequest
                 'name' => $this->name
             ]);
 
-            foreach($this->products as $product){
+            foreach($this->products ?? [] as $product){
 
                 if(!in_array('id', array_keys($product))){
 
